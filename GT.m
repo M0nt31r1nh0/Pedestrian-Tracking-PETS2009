@@ -35,11 +35,21 @@ tracks = struct('id', {}, ...
 
 nextID = 1;
 
+% Clear old results file before writing new results
+if exist('results.txt', 'file')
+    delete('results.txt');
+end
+
+% Open a file to save detection/tracking results
+outFile = fopen('results.txt', 'w');
+if outFile == -1
+    error('Cannot open output file results.txt for writing.');
+end
 
 figure; hold on
 
-for i = 0: baseValue
-    imgfr = imread(sprintf('Crowd_PETS\\S2\\L1\\Time_12-34\\View_001\\frame_%.4d.jpg', i + 1));
+for i = 1: baseValue
+    imgfr = imread(sprintf('Crowd_PETS\\S2\\L1\\Time_12-34\\View_001\\frame_%.4d.jpg', i));
     imgdif = (abs(double(imgbk(:, :, 1)) - double(imgfr(:, :, 1))) > thr) | ...
              (abs(double(imgbk(:, :, 2)) - double(imgfr(:, :, 2))) > thr) | ...
              (abs(double(imgbk(:, :, 3)) - double(imgfr(:, :, 3))) > thr);
@@ -151,7 +161,7 @@ for i = 0: baseValue
     imshow(imgfr);
     hold on;
 
-    gt_frame = gt(gt(:,1) == i + 1, :);
+    gt_frame = gt(gt(:,1) == i, :);
 
     for k = 1: size(gt_frame,1)
         x = gt_frame(k,3);
@@ -188,8 +198,22 @@ for i = 0: baseValue
                 plot(traj(startIdx:end,1), traj(startIdx:end,2), ...
                      'r-', 'LineWidth', 2);
             end
+
+            % Write each tracked object to results file:
+            % frame id left top width height confidence x y z
+            left = bbox(1);
+            top  = bbox(2);
+            width = bbox(3);
+            height = bbox(4);
+            confidence = 1.0;
+            fprintf(outFile, '%d %d %.2f %.2f %.2f %.2f %.2f -1 -1 -1\n', ...
+                    i, tracks(t).id, left, top, width, height, confidence);
         end
     end
 
     drawnow;
 end
+
+fclose(outFile);
+
+
