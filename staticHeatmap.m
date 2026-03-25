@@ -21,23 +21,40 @@ cy = top  + height / 2;
 img_width = 768;
 img_height = 576;
 
+sigma = 10;
+kernel_size = 61;
+h = fspecial('gaussian', kernel_size, sigma);
+half_k = floor(kernel_size / 2);
+
 hm = zeros(img_height, img_width);
 
 for i = 1:length(cx)
-    x = round(cx(i));
-    y = round(cy(i));
+    x_int = round(cx(i));
+    y_int = round(cy(i));
     
-    if x > 0 && x <= img_width && y > 0 && y <= img_height
-        hm(y, x) = hm(y, x) + 1;
+    if x_int > 0 && x_int <= img_width && y_int > 0 && y_int <= img_height
+        y_start = max(1, y_int - half_k);
+        y_end = min(img_height, y_int + half_k);
+        x_start = max(1, x_int - half_k);
+        x_end = min(img_width, x_int + half_k);
+        
+        ky_start = 1 + (y_start - (y_int - half_k));
+        ky_end = ky_start + (y_end - y_start);
+        kx_start = 1 + (x_start - (x_int - half_k));
+        kx_end = kx_start + (x_end - x_start);
+        
+        hm(y_start:y_end, x_start:x_end) = hm(y_start:y_end, x_start:x_end) + h(ky_start:ky_end, kx_start:kx_end);
     end
 end
 
-sigma = 15; % controls spread
-heatmap_smooth = imgaussfilt(hm, sigma);
-heatmap_smooth = heatmap_smooth / max(heatmap_smooth(:));
+
+
+if max(hm(:)) > 0
+    hm = hm / max(hm(:));
+end
 
 figure;
-imagesc(heatmap_smooth);
+imagesc(hm);
 axis image;
 colormap('hot');
 colorbar;

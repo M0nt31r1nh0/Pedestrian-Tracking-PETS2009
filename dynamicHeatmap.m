@@ -1,4 +1,4 @@
-data = readmatrix('PETS-S2L1\\det\\det.txt');
+data = readmatrix('results.txt');
 
 frame = data(:,1);
 id    = data(:,2);
@@ -21,6 +21,10 @@ cy = top  + height / 2;
 img_width = 768;
 img_height = 576;
 
+sigma = 10;
+kernel_size = 61;
+h = fspecial('gaussian', kernel_size, sigma);
+half_k = floor(kernel_size / 2);
 
 unique_frames = unique(frame);
 
@@ -33,16 +37,28 @@ for f = 1:length(unique_frames)
     idx = frame == current_frame;
     
     for i = find(idx)'
-        x = round(cx(i));
-        y = round(cy(i));
+        x_int = round(cx(i));
+        y_int = round(cy(i));
         
-        if x > 0 && x <= img_width && y > 0 && y <= img_height
-            temp_map(y, x) = temp_map(y, x) + 1;
+        if x_int > 0 && x_int <= img_width && y_int > 0 && y_int <= img_height
+            y_start = max(1, y_int - half_k);
+            y_end = min(img_height, y_int + half_k);
+            x_start = max(1, x_int - half_k);
+            x_end = min(img_width, x_int + half_k);
+            
+            ky_start = 1 + (y_start - (y_int - half_k));
+            ky_end = ky_start + (y_end - y_start);
+            kx_start = 1 + (x_start - (x_int - half_k));
+            kx_end = kx_start + (x_end - x_start);
+            
+            temp_map(y_start:y_end, x_start:x_end) = temp_map(y_start:y_end, x_start:x_end) + h(ky_start:ky_end, kx_start:kx_end);
         end
     end
     
-    temp_map_smooth = imgaussfilt(temp_map, 10);
-    temp_map_smooth = temp_map_smooth / max(temp_map_smooth(:));
+    temp_map_smooth = temp_map;
+    if max(temp_map(:)) > 0
+        temp_map_smooth = temp_map_smooth / max(temp_map(:));
+    end
     
     imagesc(temp_map_smooth);
     axis image;
