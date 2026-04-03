@@ -59,3 +59,4 @@ axis image;
 colormap('hot');
 colorbar;
 title('Static Occupancy Heatmap');
+savefig( "static_heatmap.fig" )
