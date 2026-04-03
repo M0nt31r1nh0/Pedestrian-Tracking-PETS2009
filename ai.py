@@ -13,10 +13,6 @@ input_folder = 'Crowd_PETS/S2/L1/Time_12-34/View_001'
 # Output file
 output_file = 'NNresults.txt'
 
-# Initialize output file with optional header comment
-with open(output_file, 'w') as f:
-    f.write('# frame id left top width height conf x y z\n')
-
 # Find image files (jpg, png, etc.) and sort by filename
 img_files = sorted(glob(os.path.join(input_folder, '*.*')))
 img_files = [p for p in img_files if p.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff'))]
@@ -59,6 +55,6 @@ with open(output_file, 'a') as f:
                 y3 = -1
                 z3 = -1
 
-                f.write(f"{frame_no+1} {pid} {x1:.2f} {y1:.2f} {width:.2f} {height:.2f} {conf:.4f} {x3} {y3} {z3}\n")
+                f.write(f"{(frame_no+1)} {pid} {x1:.2f} {y1:.2f} {width:.2f} {height:.2f} {conf:.4f} {x3} {y3} {z3}\n")
 
 print(f'Done: results written to {output_file} ({len(img_files)} images)')
