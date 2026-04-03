@@ -144,7 +144,7 @@ for frameNumber = 1:numFramesProcess
             tracks(t).hist       = 0.95 * tracks(t).hist + 0.05 * currentHists{bestIdx};
             tracks(t).bbox       = currentBBoxes{bestIdx};
             tracks(t).missedFrames = 0;
-            tracks(t).confidence = 1.0 - cost; % Confidence based on histogram similarity
+            tracks(t).confidence = 1.0 - bestCost; % Confidence based on histogram similarity
             tracks(t).isActive   = true;
             tracks(t).activeFrames = tracks(t).activeFrames + 1; % Increment active frame counter
 
@@ -178,7 +178,7 @@ for frameNumber = 1:numFramesProcess
             tracks(end).missedFrames   = 0;
             tracks(end).velocity       = [0 0];
             tracks(end).isActive       = true;
-            tracks(end).confidence     = -1.0;
+            tracks(end).confidence     = 1.0;
         end
     end
 
@@ -228,7 +228,7 @@ for frameNumber = 1:numFramesProcess
             top   = bbox(2);
             width = bbox(3);
             height= bbox(4);
-            confidence = 1.0;
+            confidence = tracks(t).confidence;
             fprintf(outFile, '%d %d %.2f %.2f %.2f %.2f %.2f -1 -1 -1\n', ...
                     frameNumber, tracks(t).id, left, top, width, height, confidence);
         end
