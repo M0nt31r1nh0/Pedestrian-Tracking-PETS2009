@@ -1,0 +1,14 @@
+
+===== TRAJECTORY-SHAPE CLUSTER STATISTICS =====
+
+Cluster 1
+  Number of trajectories: 10
+  Mean duration: 198.90 frames
+  Mean path length: 1059.81 px
+  Mean net displacement: 171.38 px
+
+Cluster 2
+  Number of trajectories: 14
+  Mean duration: 139.50 frames
+  Mean path length: 775.62 px
+  Mean net displacement: 322.20 px
