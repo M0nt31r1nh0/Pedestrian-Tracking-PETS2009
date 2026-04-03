@@ -1,0 +1,14 @@
+========== EVALUATION ==========
+Total GT objects:        4476
+Total predicted objects: 4755
+True Positives (TP):     4079
+False Positives (FP):    676
+False Negatives (FN):    397
+
+FN % (over GT):          8.87%
+FP % (over predictions): 14.22%
+FP % (over GT):          15.10%
+
+Precision:               0.8578
+Recall:                  0.9113
+F1-score:                0.8838

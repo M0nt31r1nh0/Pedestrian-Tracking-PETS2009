@@ -16,3 +16,13 @@ Goal 7: running performance.m creates the folder "evaluation_output" and its con
     evaluation_summary.txt: shows the stats for the run with IoU threshold of 0.5
     error_frame_0016.png: shows an example of a false positive, where the pedestrian is already in frame but the ground truth hasn't taken them into account
     error_frame_0022.png: shows an example of a false negative, whre the pedestrian is behind an obstacle and our algorithm can't detect him
+
+Goal 8: 
+    running ai.py creates the NNresults.txt by running the model named "yolo26n.pt" over the video.
+    running NNperformance.m creates the folder "NNevaluation_output" and its contents, similar to Goal 7 but using the NN instead of our algorithm.
+    The NN has better performance than our algorithm in all metrics
+    The Scuccess rate over IoU threshold ratio is always better than our algorithm 
+    at IoU threshold of 0.5 it has relatively:
+    ~8% better Precision
+    ~28% better Recall
+    ~18% better F1-score
